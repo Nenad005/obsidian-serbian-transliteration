@@ -1,0 +1,9 @@
+{
+  "id": "serbian-transliteration",
+  "name": "Serbian Transliteration",
+  "version": "1.0.0",
+  "minAppVersion": "1.5.0",
+  "description": "Convert Serbian text between Cyrillic and Latin while preserving Markdown, code, and link targets.",
+  "author": "Serbian Transliteration contributors",
+  "isDesktopOnly": false
+}
