@@ -20,7 +20,7 @@ export class TransliterationSettingTab extends PluginSettingTab {
     this.containerEl.empty();
     new Setting(this.containerEl)
       .setName('Protect Markdown and links')
-      .setDesc('Leave frontmatter, code, HTML, comments, URLs and link targets unchanged. Turning this off converts everything in the chosen range.')
+      .setDesc('Leave frontmatter, code, HTML, comments, web addresses and link targets unchanged. Turning this off converts everything in the chosen range.')
       .addToggle((toggle) => toggle.setValue(this.plugin.settings.protectMarkdown).onChange(async (value) => {
         this.plugin.settings.protectMarkdown = value;
         await this.plugin.saveSettings();

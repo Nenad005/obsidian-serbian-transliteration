@@ -4,7 +4,12 @@ import { DEFAULT_SETTINGS, TransliterationSettingTab, type TransliterationSettin
 import type { Direction } from './transliteration/convert';
 
 class ConfirmConversionModal extends Modal {
-  constructor(app: App, private direction: Direction, private convert: () => void) {
+  constructor(
+    app: App,
+    private direction: Direction,
+    private convert: () => void,
+    private closed: () => void,
+  ) {
     super(app);
   }
 
@@ -23,14 +28,19 @@ class ConfirmConversionModal extends Modal {
 
   onClose(): void {
     this.contentEl.empty();
+    this.closed();
   }
 }
 
 export default class SerbianTransliterationPlugin extends Plugin {
   settings: TransliterationSettings = { ...DEFAULT_SETTINGS };
+  private enabled = false;
+  private confirmations = new Set<ConfirmConversionModal>();
 
   async onload(): Promise<void> {
-    const saved = await this.loadData();
+    this.enabled = true;
+    const data: unknown = await this.loadData();
+    const saved = data && typeof data === 'object' ? data as Record<string, unknown> : {};
     this.settings = {
       protectMarkdown: typeof saved?.protectMarkdown === 'boolean' ? saved.protectMarkdown : DEFAULT_SETTINGS.protectMarkdown,
       confirmWholeNote: typeof saved?.confirmWholeNote === 'boolean' ? saved.confirmWholeNote : DEFAULT_SETTINGS.confirmWholeNote,
@@ -49,6 +59,12 @@ export default class SerbianTransliterationPlugin extends Plugin {
     await this.saveData(this.settings);
   }
 
+  onunload(): void {
+    this.enabled = false;
+    for (const modal of this.confirmations) modal.close();
+    this.confirmations.clear();
+  }
+
   private convert(editor: Editor, direction: Direction): void {
     const source = editor.getValue();
     const selections = editor.listSelections();
@@ -56,6 +72,7 @@ export default class SerbianTransliterationPlugin extends Plugin {
     // Capture context before opening the modal and refuse stale edits.
     const file = this.app.workspace.getActiveFile();
     const apply = () => {
+      if (!this.enabled) return;
       if (editor.getValue() !== source || this.app.workspace.getActiveFile() !== file) {
         new Notice('The note changed. Run the conversion command again.');
         return;
@@ -90,11 +107,15 @@ export default class SerbianTransliterationPlugin extends Plugin {
         new Notice(`Converted to Serbian ${direction === 'latin' ? 'Latin' : 'Cyrillic'}.`);
       } catch (error) {
         console.error('Serbian Transliteration:', error);
-        new Notice('Conversion failed. Your note was not changed.');
+        new Notice('Conversion failed. Check your note and use undo if needed.');
       }
     };
     if (!selected && this.settings.confirmWholeNote) {
-      new ConfirmConversionModal(this.app, direction, apply).open();
+      const modal = new ConfirmConversionModal(this.app, direction, apply, () => {
+        this.confirmations.delete(modal);
+      });
+      this.confirmations.add(modal);
+      modal.open();
     } else apply();
   }
 }

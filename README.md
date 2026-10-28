@@ -5,6 +5,20 @@ locally: no network requests, API keys, accounts or external services.
 
 ## Install
 
+The plugin is not yet listed in the Obsidian Community directory. Until approval,
+install it manually using a published GitHub release:
+
+1. Open [Releases](https://github.com/Nenad005/obsidian-serbian-transliteration/releases/latest)
+   and download the **main.js** and **manifest.json** assets, not the source archives.
+2. Put both files in `YourVault/.obsidian/plugins/serbian-transliteration/`.
+3. Restart Obsidian and enable **Serbian Transliteration** under **Settings →
+   Community plugins**. Turn off Restricted mode if needed.
+
+If no published release is available yet, use the source build below. A draft
+release is visible only to repository maintainers until it is published.
+
+### Install a local build
+
 1. Find your Obsidian vault folder. In Obsidian, open **Settings → Community
    plugins** and turn off Restricted mode if necessary.
 2. Copy the entire `release/serbian-transliteration` folder from this project into
@@ -97,12 +111,11 @@ protection off to deliberately convert literal text, including syntax/targets.
 
 ## Development
 
-Use Node.js 22 or newer.
+Use Node.js 22.12 or newer.
 
 ```sh
-npm install
-npm test
-npm run build
+npm ci
+npm run check
 ```
 
 The build produces `main.js` and an installable folder at
@@ -117,3 +130,28 @@ In a throwaway note, test both directions on a selection and on the whole note.
 Check code/frontmatter/link protection, capitalized digraphs, multiple selections,
 and a single undo. Try Source mode and Live Preview on desktop and mobile before
 publishing to the Obsidian community directory.
+
+## Privacy and security
+
+This plugin is free and fully functional offline. It makes no network requests,
+collects no telemetry, displays no ads, requires no account or payment, and does
+not access files outside your vault. Settings are stored using Obsidian's plugin
+storage. It changes only eligible text in the active editor when you explicitly
+run a conversion command. It never installs or updates itself or dependencies.
+
+Report bugs through [GitHub issues](https://github.com/Nenad005/obsidian-serbian-transliteration/issues).
+For security-sensitive reports, see [SECURITY.md](SECURITY.md).
+
+## License
+
+[MIT](LICENSE), copyright 2026 Nenad005. This is an independent community plugin,
+not an official Obsidian product.
+
+The Markdown parser and its runtime dependencies retain their original licenses.
+Full notices are in [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt) and embedded
+in the distributed `main.js` so installations retain the required attribution.
+
+## Releasing and community submission
+
+See [SUBMISSION.md](SUBMISSION.md) for the review checklist, manual smoke test,
+GitHub release process and current official submission steps.

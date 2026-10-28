@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "minAppVersion": "1.5.0",
   "description": "Convert Serbian text between Cyrillic and Latin while preserving Markdown, code, and link targets.",
-  "author": "Serbian Transliteration contributors",
+  "author": "Nenad005",
+  "authorUrl": "https://github.com/Nenad005",
   "isDesktopOnly": false
 }

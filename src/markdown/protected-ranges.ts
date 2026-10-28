@@ -73,7 +73,7 @@ export function protectedRanges(source: string): Range[] {
     add(match.index, match.index + match[0].length);
   }
   // Bare URLs/email are text in CommonMark; keep them usable as well.
-  for (const match of source.matchAll(/(?:https?:\/\/|obsidian:\/\/|www\.)[^\s<>\[\]`]+|[\p{L}\p{N}._%+-]+@[\p{L}\p{N}.-]+\.[\p{L}]{2,}/gu)) {
+  for (const match of source.matchAll(/(?:https?:\/\/|obsidian:\/\/|www\.)[^\s<>[\]`]+|[\p{L}\p{N}._%+-]+@[\p{L}\p{N}.-]+\.[\p{L}]{2,}/gu)) {
     add(match.index, match.index + match[0].length);
   }
 

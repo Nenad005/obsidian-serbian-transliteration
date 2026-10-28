@@ -168,6 +168,19 @@ describe('editor commands', () => {
     expect(state.modals).toHaveLength(0);
   });
 
+  it('closes pending confirmation and refuses edits after plugin unload', async () => {
+    const { plugin, run } = await setup();
+    const editor = new TestEditor('Ljubav');
+    run(editor);
+    const modal = state.modals[0] as { convert: () => void; close: () => void };
+    const close = vi.spyOn(modal, 'close');
+    plugin.onunload();
+    expect(close).toHaveBeenCalledOnce();
+    modal.convert();
+    expect(editor.text).toBe('Ljubav');
+    expect(editor.transactions).toBe(0);
+  });
+
   it('does not create an empty transaction for protected selections', async () => {
     const { run } = await setup();
     const editor = new TestEditor('`Ljubav`', [[1, 7]]);
